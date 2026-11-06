@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>چت امیر و ITACHI</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #dce8df;
+  font-family: Tahoma, Arial;
+}
+
+.phone {
+  width: 90%;
+  max-width: 390px;
+  min-height: 550px;
+  padding: 18px;
+  border-radius: 24px;
+  background: #efe9df;
+  box-shadow: 0 18px 55px #0002;
+  display: flex;
+  flex-direction: column;
+}
+
+.top {
+  background: #087e70;
+  color: white;
+  margin: -18px -18px 24px;
+  padding: 20px;
+  border-radius: 24px 24px 0 0;
+  font-weight: bold;
+}
+
+.date {
+  align-self: center;
+  background: #e1dbd1;
+  padding: 6px 12px;
+  border-radius: 9px;
+  margin-bottom: 24px;
+  font-size: 12px;
+}
+
+.bubble {
+  max-width: 85%;
+  padding: 13px 15px;
+  border-radius: 15px;
+  margin-bottom: 14px;
+  line-height: 1.9;
+  font-size: 15px;
+  box-shadow: 0 1px 2px #0001;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: showMessage .6s ease forwards;
+}
+
+.mine {
+  align-self: flex-start;
+  background: #d8f8c6;
+  animation-delay: 1s;
+}
+
+.theirs {
+  align-self: flex-end;
+  background: white;
+  animation-delay: 3s;
+}
+
+.sender {
+  display: block;
+  font-size: 11px;
+  color: #168276;
+  font-weight: bold;
+}
+
+@keyframes showMessage {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+
+  <div class="top">چت</div>
+
+  <div class="date">11/6/2026</div>
+
+  <div class="bubble mine">
+    امیر سید سایت برات بسازم؟
+  </div>
+
+  <div class="bubble theirs">
+    <span class="sender">ITACHI</span>
+    نه
+  </div>
+
+</div>
+
+<script>
+window.addEventListener("load", () => {
+
+  setTimeout(() => {
+
+    const AudioContext =
+      window.AudioContext || window.webkitAudioContext;
+
+    if (!AudioContext) return;
+
+    const audio = new AudioContext();
+
+    const notes = [
+      [659,.16], [523,.16], [392,.22],
+      [440,.16], [392,.16], [330,.22],
+      [294,.16], [330,.16], [392,.3],
+      [262,.18], [330,.18], [392,.18],
+      [523,.32], [440,.18], [392,.18],
+      [330,.35]
+    ];
+
+    let time = audio.currentTime;
+
+    notes.forEach(([freq,duration],i) => {
+
+      const osc = audio.createOscillator();
+      const gain = audio.createGain();
+
+      osc.type = i % 3 === 0 ? "square" : "triangle";
+      osc.frequency.value = freq;
+
+      gain.gain.setValueAtTime(.0001,time);
+      gain.gain.exponentialRampToValueAtTime(.1,time+.02);
+      gain.gain.exponentialRampToValueAtTime(.0001,time+duration);
+
+      osc.connect(gain);
+      gain.connect(audio.destination);
+
+      osc.start(time);
+      osc.stop(time+duration+.02);
+
+      time += duration+.035;
+    });
+
+  }, 3000);
+
+});
+</script>
+
+</body>
+</html>
